@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 // UI Components (defined locally to avoid creating new files)
 const MagicWandIcon = () => (
@@ -51,6 +51,45 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ content, onGenerate, isLoading }) => {
+  const calculateTimeLeft = () => {
+    const eventDate = new Date('2024-12-19T09:00:00').getTime();
+    const now = new Date().getTime();
+    const difference = eventDate - now;
+
+    let timeLeft: { [key: string]: number } = {};
+
+    if (difference > 0) {
+      timeLeft = {
+        Días: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        Horas: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        Minutos: Math.floor((difference / 1000 / 60) % 60),
+        Segundos: Math.floor((difference / 1000) % 60),
+      };
+    }
+    return timeLeft;
+  };
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  });
+
+  // FIX: Changed type from JSX.Element[] to React.ReactElement[] to resolve namespace error.
+  const timerComponents: React.ReactElement[] = Object.keys(timeLeft).map((interval) => {
+    const value = timeLeft[interval as keyof typeof timeLeft];
+    return (
+     <div key={interval} className="text-center">
+        <span className="text-3xl md:text-5xl font-bold">{String(value || 0).padStart(2, '0')}</span>
+        <span className="block text-xs md:text-sm uppercase tracking-widest">{interval}</span>
+    </div>
+    );
+  });
+
   return (
     <section 
       id="home" 
@@ -70,6 +109,17 @@ const Hero: React.FC<HeroProps> = ({ content, onGenerate, isLoading }) => {
         <p className="max-w-3xl mx-auto mb-8 text-base md:text-lg uppercase">
           {content.description}
         </p>
+
+        {timerComponents.length ? (
+            <div className="max-w-xl mx-auto mb-8">
+                <div className="grid grid-cols-4 gap-4 bg-black bg-opacity-30 backdrop-blur-sm p-4 rounded-lg shadow-xl border border-white/20">
+                    {timerComponents}
+                </div>
+            </div>
+        ) : (
+            <p className="my-8 text-2xl font-bold text-yellow-400">¡El evento ha comenzado!</p>
+        )}
+        
         <a 
           href="#register" 
           className="bg-yellow-400 text-gray-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-yellow-300 transition duration-300 ease-in-out transform hover:scale-105 shadow-xl"

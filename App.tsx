@@ -10,8 +10,8 @@ import Testimonials from './components/Testimonials';
 import Registration from './components/Registration';
 import Footer from './components/Footer';
 import type { Speaker, Sponsor, Testimonial, Ticket } from './types';
-// FIX: Removed unused `Type` enum to prevent potential runtime errors with enums.
-import { GoogleGenAI } from "@google/genai";
+// FIX: Use the 'Type' enum from @google/genai for schema definitions to ensure type safety.
+import { GoogleGenAI, Type } from "@google/genai";
 
 const initialContent = {
   hero: {
@@ -103,15 +103,15 @@ const App: React.FC = () => {
       switch (section) {
         case 'hero':
           prompt += " Also provide a creative and detailed prompt for an image generator to create a high-quality, inspiring background image relevant to a Christian pastors' congress in Mexico. The image should evoke unity, faith, and leadership.";
-          // FIX: Use string literals for schema types to prevent potential runtime errors with enums.
+          // FIX: Use the Type enum for schema definitions to avoid runtime errors.
           schema = {
-            type: 'OBJECT', properties: {
-              title: { type: 'STRING' },
-              subtitle: { type: 'STRING' },
-              dateAndLocation: { type: 'STRING' },
-              description: { type: 'STRING' },
-              cta: { type: 'STRING' },
-              imagePrompt: { type: 'STRING' }
+            type: Type.OBJECT, properties: {
+              title: { type: Type.STRING },
+              subtitle: { type: Type.STRING },
+              dateAndLocation: { type: Type.STRING },
+              description: { type: Type.STRING },
+              cta: { type: Type.STRING },
+              imagePrompt: { type: Type.STRING }
             }, required: ['title', 'subtitle', 'dateAndLocation', 'description', 'cta', 'imagePrompt']
           };
           generateImage = true;
@@ -119,14 +119,14 @@ const App: React.FC = () => {
           break;
         case 'about':
            prompt += " Also provide a creative and detailed prompt for an image generator to create a photo of diverse pastors in a collaborative and professional setting in Mexico.";
-          // FIX: Use string literals for schema types to prevent potential runtime errors with enums.
+          // FIX: Use the Type enum for schema definitions to avoid runtime errors.
           schema = {
-            type: 'OBJECT', properties: {
-              title: { type: 'STRING' },
-              description: { type: 'STRING' },
-              topicsTitle: { type: 'STRING' },
-              topics: { type: 'ARRAY', items: { type: 'STRING' } },
-              imagePrompt: { type: 'STRING' }
+            type: Type.OBJECT, properties: {
+              title: { type: Type.STRING },
+              description: { type: Type.STRING },
+              topicsTitle: { type: Type.STRING },
+              topics: { type: Type.ARRAY, items: { type: Type.STRING } },
+              imagePrompt: { type: Type.STRING }
             }, required: ['title', 'description', 'topicsTitle', 'topics', 'imagePrompt']
           };
           generateImage = true;
@@ -134,15 +134,15 @@ const App: React.FC = () => {
           break;
         case 'speakers':
             prompt += " Generate a list of 4 diverse, fictional speakers. For each, provide their name, a credible title, a short bio, and a detailed prompt for a photorealistic, professional headshot."
-            // FIX: Use string literals for schema types to prevent potential runtime errors with enums.
+            // FIX: Use the Type enum for schema definitions to avoid runtime errors.
             schema = {
-                type: 'OBJECT', properties: {
-                    title: { type: 'STRING' },
-                    description: { type: 'STRING' },
-                    speakers: { type: 'ARRAY', items: {
-                        type: 'OBJECT', properties: {
-                            name: { type: 'STRING' }, title: { type: 'STRING' }, bio: { type: 'STRING' },
-                            imagePrompt: { type: 'STRING' }
+                type: Type.OBJECT, properties: {
+                    title: { type: Type.STRING },
+                    description: { type: Type.STRING },
+                    speakers: { type: Type.ARRAY, items: {
+                        type: Type.OBJECT, properties: {
+                            name: { type: Type.STRING }, title: { type: Type.STRING }, bio: { type: Type.STRING },
+                            imagePrompt: { type: Type.STRING }
                         }, required: ['name', 'title', 'bio', 'imagePrompt']
                     }}
                 }, required: ['title', 'description', 'speakers']
@@ -150,25 +150,25 @@ const App: React.FC = () => {
             break;
         case 'testimonials':
             prompt += " Generate 3 fictional, powerful testimonials from pastors who attended previous events.";
-            // FIX: Use string literals for schema types to prevent potential runtime errors with enums.
+            // FIX: Use the Type enum for schema definitions to avoid runtime errors.
             schema = {
-                type: 'OBJECT', properties: {
-                    title: { type: 'STRING' },
-                    description: { type: 'STRING' },
-                    testimonials: { type: 'ARRAY', items: {
-                        type: 'OBJECT', properties: {
-                            quote: { type: 'STRING' }, author: { type: 'STRING' }, church: { type: 'STRING' }
+                type: Type.OBJECT, properties: {
+                    title: { type: Type.STRING },
+                    description: { type: Type.STRING },
+                    testimonials: { type: Type.ARRAY, items: {
+                        type: Type.OBJECT, properties: {
+                            quote: { type: Type.STRING }, author: { type: Type.STRING }, church: { type: Type.STRING }
                         }, required: ['quote', 'author', 'church']
                     }}
                 }, required: ['title', 'description', 'testimonials']
             };
             break;
         default: // sponsors, donors, registration
-            // FIX: Use string literals for schema types to prevent potential runtime errors with enums.
+            // FIX: Use the Type enum for schema definitions to avoid runtime errors.
             schema = {
-                type: 'OBJECT', properties: {
-                    title: { type: 'STRING' },
-                    description: { type: 'STRING' }
+                type: Type.OBJECT, properties: {
+                    title: { type: Type.STRING },
+                    description: { type: Type.STRING }
                 }, required: ['title', 'description']
             };
             break;
